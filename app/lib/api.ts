@@ -4,6 +4,9 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function getCampaignInsights(): Promise<CampaignInsights> {
   const res = await fetch(`${BASE_URL}/campaigns/insights`, {
+    headers:{
+      "Content-type":"application/json"
+    },
     cache: 'no-store', // always fresh
   });
 
@@ -17,6 +20,9 @@ export async function getCampaignInsights(): Promise<CampaignInsights> {
 
 export async function getCampaigns(): Promise<Campaign[]> {
   const res = await fetch(`${BASE_URL}/campaigns`, {
+      headers:{
+      "Content-type":"application/json"
+    },
     cache: 'no-store',
   });
 
@@ -26,6 +32,9 @@ export async function getCampaigns(): Promise<Campaign[]> {
 
 export async function getCampaignById(id: string): Promise<Campaign> {
   const res = await fetch(`${BASE_URL}/campaigns/${id}`, {
+      headers:{
+      "Content-type":"application/json"
+    },
     cache: 'no-store',
   });
 
@@ -37,6 +46,9 @@ export async function getCampaignInsightsById(
   id: string
 ): Promise<CampaignIdInsights> {
   const res = await fetch(`${BASE_URL}/campaigns/${id}/insights`, {
+      headers:{
+      "Content-type":"application/json"
+    },
     cache: 'no-store',
   });
 
