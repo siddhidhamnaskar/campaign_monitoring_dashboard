@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import MetricCard from '../../../../components/MetricCard';
 import { StreamInsight } from '@/app/types/campaign';
 import { getCampaignById } from '@/app/lib/api';
@@ -97,6 +98,14 @@ useEffect(()=>{
 
   return (
     <main className="p-6 space-y-6">
+      <div className="mb-4">
+        <Link
+          href={`/`}
+          className="text-blue-600 hover:underline flex items-center"
+        >
+          ← Go Back
+        </Link>
+      </div>
          <h1 className="text-2xl font-semibold">{campaign.name}</h1>
       <section className="bg-gray-50 p-6 rounded-lg">
         <div className="flex justify-between items-center">
