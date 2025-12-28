@@ -6,9 +6,14 @@ export default function MetricCard({
   value: string | number;
 }) {
   return (
-    <div className="border rounded p-4">
-      <p className="text-sm text-gray-500">{title}</p>
-      <p className="text-xl font-semibold mt-1">{value}</p>
+    <div className="rounded-lg border bg-white p-4 shadow-sm hover:shadow transition">
+      <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+        {title}
+      </p>
+
+      <p className="mt-1 text-2xl font-semibold text-gray-900">
+        {value}
+      </p>
     </div>
   );
 }

@@ -10,7 +10,7 @@ export default async function Home() {
   return (
     <main className="p-6">
       <h1 className="text-2xl font-semibold mb-6">
-        Campaign Insights
+        Campaign Monitoring Dashboard
       </h1>
 
       <DashboardOverview insights={insights} />

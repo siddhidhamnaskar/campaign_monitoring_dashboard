@@ -9,7 +9,7 @@ export default function DashboardOverview({
   insights: CampaignInsights;
 }) {
   return (
-    <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <section className="grid grid-cols-2 md:grid-cols-4 gap-4 pb-5">
       <MetricCard title="Total Campaigns" value={insights.total_campaigns} />
       <MetricCard title="Active Campaigns" value={insights.active_campaigns} />
       <MetricCard title="Paused Campaigns" value={insights.paused_campaigns} />

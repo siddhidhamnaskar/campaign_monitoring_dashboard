@@ -13,48 +13,76 @@ export default function StreamInsightsPage() {
   const [data, setData] = useState<StreamInsight | null>(null);
   const [campaign, setCampaign] = useState<any>(null);
   const [connected, setConnected] = useState(false);
+  const [error,setError]=useState<any>(null);
 
-  useEffect(() => {
-    if (!id) return;
-     async function fetchData() {
-           try {
-             const [campaignRes] = await Promise.all([
-               getCampaignById(id),
-               
-             ]);
-     
-             setCampaign(campaignRes);
-            
-           } finally {
-            //  setLoading(false);
-           }
-         }
-     
-         fetchData();
+ useEffect(() => {
+  if (!id) return;
 
-    console.log(id);
-    const eventSource = new EventSource(
+
+  
+
+  let eventSource: EventSource | null = null;
+  let retryTimeout: NodeJS.Timeout;
+
+  const connectStream = () => {
+    eventSource = new EventSource(
       `${process.env.NEXT_PUBLIC_API_URL}/campaigns/${id}/insights/stream`
     );
 
     eventSource.onopen = () => {
       setConnected(true);
+      setError(null);
       console.log('🟢 Stream connected');
     };
 
     eventSource.onmessage = (event) => {
-      const parsed: StreamInsight = JSON.parse(event.data);
-      setData(parsed);
+      try {
+        const parsed: StreamInsight = JSON.parse(event.data);
+        console.log(parsed);
+        setData(parsed);
+      } catch (e) {
+        console.error('Failed to parse stream data', e);
+      }
     };
 
     eventSource.onerror = () => {
-      console.error('🔴 Stream error');
-      eventSource.close();
+      console.warn('🔴 Stream disconnected');
       setConnected(false);
-    };
+      setError('Live insights temporarily unavailable. Reconnecting…');
 
-    return () => eventSource.close();
-  }, [id]);
+      eventSource?.close();
+
+      // Retry after 10 seconds (safe for rate limits)
+      retryTimeout = setTimeout(connectStream, 10000);
+    };
+  };
+
+  connectStream();
+
+  return () => {
+    eventSource?.close();
+    clearTimeout(retryTimeout);
+  };
+}, [id]);
+
+useEffect(()=>{
+   async function fetchData() {
+        try {
+          const [campaignRes] = await Promise.all([
+            getCampaignById(id),
+           
+          ]);
+  
+          setCampaign(campaignRes);
+         
+        } finally {
+          // setLoading(false);
+        }
+      }
+  
+      fetchData();
+},[id])
+
 
   if (!data || !campaign) {
     return <p className="p-6 text-center">Waiting for live insights...</p>;

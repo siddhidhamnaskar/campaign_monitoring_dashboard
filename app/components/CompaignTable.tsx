@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { Campaign } from '../types/campaign';
 import StatusBadge from './StatusBadge';
@@ -10,68 +11,112 @@ export default function CampaignTable({
 }: {
   campaigns: Campaign[];
 }) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [minBudget, setMinBudget] = useState('');
+  const [maxBudget, setMaxBudget] = useState('');
+
+  const filteredCampaigns = campaigns.filter((c) => {
+    const matchesName = c.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const campaignDate = new Date(c.created_at);
+    const matchesDate =
+      (!startDate || campaignDate >= new Date(startDate)) &&
+      (!endDate || campaignDate <= new Date(endDate));
+    const matchesBudget =
+      (!minBudget || c.budget >= parseFloat(minBudget)) &&
+      (!maxBudget || c.budget <= parseFloat(maxBudget));
+    return matchesName && matchesDate && matchesBudget;
+  });
+
   return (
     <section>
-      <h2 className="text-xl font-semibold mb-4">
-        Campaigns
-      </h2>
-
-      <table className="w-full border">
-        <thead>
-          <tr className="bg-gray-100 text-left">
-            <th className="p-2">Name</th>
-            <th className="p-2">Status</th>
-            <th className="p-2">Platforms</th>
-            <th className="p-2">Budget</th>
-            <th className="p-2">Daily Budget</th>
-            <th className="p-2">Created</th>
-            <th>Live Insights</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {campaigns.map(c => (
-            <tr key={c.id} className="border-t">
-              <td className="p-2">
-                <Link
-                  href={`/campaigns/${c.id}`}
-                  className="text-blue-600 hover:underline"
-                >
-                  {c.name}
-                </Link>
-              </td>
-
-              <td className="p-2">
-                <StatusBadge status={c.status} />
-              </td>
-
-              <td className="p-2">
-                <PlatformPills platforms={c.platforms} />
-              </td>
-
-              <td className="p-2">
-                ${c.budget.toLocaleString()}
-              </td>
-
-              <td className="p-2">
-                ${c.daily_budget.toLocaleString()}
-              </td>
-
-              <td className="p-2">
-                {new Date(c.created_at).toLocaleDateString()}
-              </td>
-              <td>
-                 <Link
-                  href={`/campaigns/${c.id}/insights/stream`}
-                  className="text-blue-600 underline flex items-end"
-                >
-                  View Live Insights →
-                </Link>
-              </td>
+      <div className="mb-4 flex flex-wrap gap-2">
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="flex-1 min-w-0 p-2 border border-gray-300 rounded"
+        />
+        <input
+          type="date"
+          placeholder="Start Date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          className="p-2 border border-gray-300 rounded"
+        />
+        <input
+          type="date"
+          placeholder="End Date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          className="p-2 border border-gray-300 rounded"
+        />
+        <input
+          type="number"
+          placeholder="Min Budget"
+          value={minBudget}
+          onChange={(e) => setMinBudget(e.target.value)}
+          className="p-2 border border-gray-300 rounded"
+        />
+        <input
+          type="number"
+          placeholder="Max Budget"
+          value={maxBudget}
+          onChange={(e) => setMaxBudget(e.target.value)}
+          className="p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div className="overflow-y-auto max-h-64 border">
+        <table className="w-full border-collapse">
+          <thead className="bg-gray-100 text-left sticky top-0">
+            <tr>
+              <th className="p-2">Name</th>
+              <th className="p-2">Status</th>
+              <th className="p-2">Platforms</th>
+              <th className="p-2">Budget</th>
+              <th className="p-2">Daily Budget</th>
+              <th className="p-2">Created</th>
+              <th>Live Insights</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {filteredCampaigns.map((c) => (
+              <tr key={c.id} className="border-t">
+                <td className="p-2">
+                  <Link
+                    href={`/campaigns/${c.id}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    {c.name}
+                  </Link>
+                </td>
+                <td className="p-2">
+                  <StatusBadge status={c.status} />
+                </td>
+                <td className="p-2">
+                  <PlatformPills platforms={c.platforms} />
+                </td>
+                <td className="p-2">${c.budget.toLocaleString()}</td>
+                <td className="p-2">${c.daily_budget.toLocaleString()}</td>
+                <td className="p-2">
+                  {new Date(c.created_at).toLocaleDateString()}
+                </td>
+                <td>
+                  <Link
+                    href={`/campaigns/${c.id}/insights/stream`}
+                    className="text-blue-600 underline flex items-end"
+                  >
+                    View Live Insights →
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }
