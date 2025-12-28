@@ -12,3 +12,17 @@ export interface CampaignInsights {
   avg_cpc: number;
   avg_conversion_rate: number;
 }
+
+
+export interface Campaign {
+  id: string;
+  name: string;
+  brand_id: string;
+  status: 'active' | 'paused' | 'completed';
+  budget: number;
+  daily_budget: number;
+  platforms: string[];
+  created_at: string;
+}
+
+
