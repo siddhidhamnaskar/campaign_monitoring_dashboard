@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { Campaign } from '../types/campaign';
+import StatusBadge from './StatusBadge';
+import PlatformPills from './PlatformPills';
 
 export default function CampaignTable({
   campaigns,
@@ -39,10 +41,12 @@ export default function CampaignTable({
                 </Link>
               </td>
 
-              <td className="p-2 capitalize">{c.status}</td>
+              <td className="p-2">
+                <StatusBadge status={c.status} />
+              </td>
 
               <td className="p-2">
-                {c.platforms.join(', ')}
+                <PlatformPills platforms={c.platforms} />
               </td>
 
               <td className="p-2">

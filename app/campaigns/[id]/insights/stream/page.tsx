@@ -57,45 +57,47 @@ export default function StreamInsightsPage() {
   }, [id]);
 
   if (!data || !campaign) {
-    return <p className="p-6">Waiting for live insights...</p>;
+    return <p className="p-6 text-center">Waiting for live insights...</p>;
   }
 
   return (
     <main className="p-6 space-y-6">
          <h1 className="text-2xl font-semibold">{campaign.name}</h1>
-      <div className="flex justify-between items-center">
-        
-        <h1 className="text-xl font-semibold">
-          Live Campaign Insights
-        </h1>
-       
+      <section className="bg-gray-50 p-6 rounded-lg">
+        <div className="flex justify-between items-center">
 
-        <span
-          className={`text-sm ${
-            connected ? 'text-green-600' : 'text-red-600'
-          }`}
-        >
-          {connected ? 'Live' : 'Disconnected'}
-        </span>
-      </div>
+          <h1 className="text-xl font-semibold">
+            Live Campaign Insights
+          </h1>
 
-      <p className="text-sm text-gray-500">
-        Last update:{' '}
-        {new Date(data.timestamp).toLocaleTimeString()}
-      </p>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <MetricCard title="Impressions" value={data.impressions} />
-        <MetricCard title="Clicks" value={data.clicks} />
-        <MetricCard title="Conversions" value={data.conversions} />
-        <MetricCard title="Spend" value={`$${data.spend}`} />
-        <MetricCard title="CTR" value={`${data.ctr}%`} />
-        <MetricCard title="CPC" value={`$${data.cpc}`} />
-        <MetricCard
-          title="Conversion Rate"
-          value={`${data.conversion_rate}%`}
-        />
-      </div>
+          <span
+            className={`text-sm ${
+              connected ? 'text-green-600' : 'text-red-600'
+            }`}
+          >
+            {connected ? 'Live' : 'Disconnected'}
+          </span>
+        </div>
+
+        <p className="text-sm text-gray-500">
+          Last update:{' '}
+          {new Date(data.timestamp).toLocaleTimeString()}
+        </p>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <MetricCard title="Impressions" value={data.impressions} />
+          <MetricCard title="Clicks" value={data.clicks} />
+          <MetricCard title="Conversions" value={data.conversions} />
+          <MetricCard title="Spend" value={`$${data.spend}`} />
+          <MetricCard title="CTR" value={`${data.ctr}%`} />
+          <MetricCard title="CPC" value={`$${data.cpc}`} />
+          <MetricCard
+            title="Conversion Rate"
+            value={`${data.conversion_rate}%`}
+          />
+        </div>
+      </section>
     </main>
   );
 }

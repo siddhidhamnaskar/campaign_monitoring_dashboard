@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import MetricCard from '../../components/MetricCard';
+import PlatformPills from '../../components/PlatformPills';
 import {
   getCampaignById,
   getCampaignInsightsById,
@@ -38,7 +39,7 @@ export default function CampaignDetailPage() {
   }, [id]);
 
   if (loading) {
-    return <p className="p-6">Loading campaign...</p>;
+    return <p className="p-6 text-center">Loading campaign...</p>;
   }
 
   if (!campaign || !insights) {
@@ -59,7 +60,10 @@ export default function CampaignDetailPage() {
       {/* Campaign Meta */}
       <section className="border rounded p-4 grid grid-cols-2 md:grid-cols-6 gap-4">
         <Meta label="Status" value={campaign.status} />
-        <Meta label="Platforms" value={campaign.platforms.join(', ')} />
+        <div>
+          <p className="text-sm text-gray-500">Platforms</p>
+          <PlatformPills platforms={campaign.platforms} />
+        </div>
         <Meta
           label="Total Budget"
           value={`$${campaign.budget.toLocaleString()}`}
@@ -82,7 +86,7 @@ export default function CampaignDetailPage() {
       </section>
 
       {/* Performance Insights */}
-      <section>
+      <section className="bg-gray-50 p-6 rounded-lg">
         <h2 className="text-xl font-semibold mb-4">
           Performance Insights
         </h2>
