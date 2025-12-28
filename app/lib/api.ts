@@ -29,6 +29,8 @@ async function handleApiError(res: Response, operation: string): Promise<never> 
       throw new Error(`Validation error: ${errorMessage}`);
     case 500:
       throw new Error(`Server error: ${errorMessage}`);
+    case 503:
+      throw new Error(`Service unavailable: ${errorMessage}`);
     default:
       throw new Error(`${res.status}: ${errorMessage}`);
   }

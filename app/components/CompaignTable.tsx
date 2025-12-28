@@ -105,22 +105,22 @@ export default function CampaignTable({
                 <td className="p-2">
                   {new Date(c.created_at).toLocaleDateString()}
                 </td>
-                <div>
-                   <Link
+                <td className="p-2">
+                  <Link
                     href={`/campaigns/${c.id}`}
-                    className="text-blue-600 hover:underline"
+                    className="text-blue-600 underline flex items-end"
                   >
                     View
                   </Link>
-                </div>
-                <td>
-                  <Link
-                    href={`/campaigns/${c.id}/insights/stream`}
-                    className="text-blue-600 underline flex items-end"
-                  >
-                    View Live Insights →
-                  </Link>
                 </td>
+            <td>
+              <Link
+                href={`/campaigns/${c.id}/insights/stream`}
+                className="text-blue-600 underline flex items-end"
+              >
+                View Live Insights →
+              </Link>
+            </td>
               </tr>
             ))}
           </tbody>
