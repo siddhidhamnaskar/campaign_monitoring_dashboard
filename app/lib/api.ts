@@ -18,7 +18,7 @@ async function handleApiError(res: Response, operation: string): Promise<never> 
 
   switch (res.status) {
     case 400:
-      throw new Error(`Bad request: ${errorMessage}`);
+      throw new Error(`Please check your input and try again.`);
     case 401:
       throw new Error(`Unauthorized: ${errorMessage}`);
     case 403:
@@ -27,10 +27,11 @@ async function handleApiError(res: Response, operation: string): Promise<never> 
       throw new Error(`Not found: ${errorMessage}`);
     case 422:
       throw new Error(`Validation error: ${errorMessage}`);
+    case 429:
+      throw new Error(`Too many requests. Please wait a moment and try again.`);
     case 500:
-      throw new Error(`Server error: ${errorMessage}`);
     case 503:
-      throw new Error(`Service unavailable: ${errorMessage}`);
+      throw new Error(`Something went wrong on our end. Please try again later.`);
     default:
       throw new Error(`${res.status}: ${errorMessage}`);
   }
