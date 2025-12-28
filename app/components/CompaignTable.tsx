@@ -78,6 +78,7 @@ export default function CampaignTable({
               <th className="p-2">Budget</th>
               <th className="p-2">Daily Budget</th>
               <th className="p-2">Created</th>
+              <th>View Details</th>
               <th>Live Insights</th>
             </tr>
           </thead>
@@ -104,6 +105,14 @@ export default function CampaignTable({
                 <td className="p-2">
                   {new Date(c.created_at).toLocaleDateString()}
                 </td>
+                <div>
+                   <Link
+                    href={`/campaigns/${c.id}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    View
+                  </Link>
+                </div>
                 <td>
                   <Link
                     href={`/campaigns/${c.id}/insights/stream`}
