@@ -1,21 +1,49 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
+import MetricCard from '../../components/MetricCard';
 import {
   getCampaignById,
   getCampaignInsightsById,
 } from '../../lib/api';
-import MetricCard from '../../components/MetricCard';
 
-export default async function CampaignDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  console.log('Campaign ID:', id);
+export default function CampaignDetailPage() {
+  const params = useParams();
+  const id = params.id as string;
 
-  const [campaign,insights] = await Promise.all([
-    getCampaignById(id),
-    getCampaignInsightsById(id),
-  ]);
+  const [campaign, setCampaign] = useState<any>(null);
+  const [insights, setInsights] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!id) return;
+
+    async function fetchData() {
+      try {
+        const [campaignRes, insightsRes] = await Promise.all([
+          getCampaignById(id),
+          getCampaignInsightsById(id),
+        ]);
+
+        setCampaign(campaignRes);
+        setInsights(insightsRes);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, [id]);
+
+  if (loading) {
+    return <p className="p-6">Loading campaign...</p>;
+  }
+
+  if (!campaign || !insights) {
+    return <p className="p-6 text-red-600">Failed to load campaign</p>;
+  }
 
   return (
     <main className="p-6 space-y-8">
@@ -23,36 +51,34 @@ export default async function CampaignDetailPage({
       <div>
         <h1 className="text-2xl font-semibold">{campaign.name}</h1>
         <p className="text-sm text-gray-500">
-          Status: <span className="capitalize">{campaign.status}</span>
+          Status:{' '}
+          <span className="capitalize">{campaign.status}</span>
         </p>
       </div>
 
       {/* Campaign Meta */}
-      <section className="border rounded p-4 grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div>
-          <p className="text-sm text-gray-500">Status</p>
-          <p>{campaign.status}</p>
-        </div>
+      <section className="border rounded p-4 grid grid-cols-2 md:grid-cols-6 gap-4">
+        <Meta label="Status" value={campaign.status} />
+        <Meta label="Platforms" value={campaign.platforms.join(', ')} />
+        <Meta
+          label="Total Budget"
+          value={`$${campaign.budget.toLocaleString()}`}
+        />
+        <Meta
+          label="Daily Budget"
+          value={`$${campaign.daily_budget.toLocaleString()}`}
+        />
+        <Meta
+          label="Created At"
+          value={new Date(campaign.created_at).toLocaleDateString()}
+        />
 
-        <div>
-          <p className="text-sm text-gray-500">Platforms</p>
-          <p>{campaign.platforms.join(', ')}</p>
-        </div>
-
-        <div>
-          <p className="text-sm text-gray-500">Total Budget</p>
-          <p>${campaign.budget.toLocaleString()}</p>
-        </div>
-
-        <div>
-          <p className="text-sm text-gray-500">Daily Budget</p>
-          <p>${campaign.daily_budget.toLocaleString()}</p>
-        </div>
-
-        <div>
-          <p className="text-sm text-gray-500">Created At</p>
-          <p>{new Date(campaign.created_at).toLocaleDateString()}</p>
-        </div>
+        {/* <Link
+          href={`/campaigns/${campaign.id}/insights/stream`}
+          className="text-blue-600 underline flex items-end"
+        >
+          View Live Insights →
+        </Link> */}
       </section>
 
       {/* Performance Insights */}
@@ -61,7 +87,7 @@ export default async function CampaignDetailPage({
           Performance Insights
         </h2>
 
-       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <MetricCard title="Impressions" value={insights.impressions} />
           <MetricCard title="Clicks" value={insights.clicks} />
           <MetricCard title="Conversions" value={insights.conversions} />
@@ -75,5 +101,14 @@ export default async function CampaignDetailPage({
         </div>
       </section>
     </main>
+  );
+}
+
+function Meta({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-sm text-gray-500">{label}</p>
+      <p>{value}</p>
+    </div>
   );
 }

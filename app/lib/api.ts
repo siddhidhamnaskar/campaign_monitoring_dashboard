@@ -1,6 +1,6 @@
 import { CampaignInsights ,Campaign,CampaignIdInsights} from '../types/campaign';
 
-const BASE_URL = 'https://mixo-fe-backend-task.vercel.app';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function getCampaignInsights(): Promise<CampaignInsights> {
   const res = await fetch(`${BASE_URL}/campaigns/insights`, {

@@ -37,4 +37,14 @@ export interface CampaignIdInsights {
   conversion_rate: number;
 }
 
-
+export interface StreamInsight{
+  campaign_id: string;
+  timestamp: string;
+  impressions: number;
+  clicks: number;
+  conversions: number;
+  spend: number;
+  ctr: number;
+  cpc: number;
+  conversion_rate: number;
+};
