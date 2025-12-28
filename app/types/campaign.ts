@@ -25,4 +25,16 @@ export interface Campaign {
   created_at: string;
 }
 
+export interface CampaignIdInsights {
+  campaignId: string;
+  timestamp: string;
+  impressions: number;
+  clicks: number;
+  conversions: number;
+  spend: number;
+  ctr: number;
+  cpc: number;
+  conversion_rate: number;
+}
+
 

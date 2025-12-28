@@ -1,4 +1,4 @@
-import { CampaignInsights ,Campaign} from '../types/campaign';
+import { CampaignInsights ,Campaign,CampaignIdInsights} from '../types/campaign';
 
 const BASE_URL = 'https://mixo-fe-backend-task.vercel.app';
 
@@ -22,4 +22,24 @@ export async function getCampaigns(): Promise<Campaign[]> {
 
   if (!res.ok) throw new Error('Failed to fetch campaigns');
   return (await res.json()).campaigns;
+}
+
+export async function getCampaignById(id: string): Promise<Campaign> {
+  const res = await fetch(`${BASE_URL}/campaigns/${id}`, {
+    cache: 'no-store',
+  });
+
+  if (!res.ok) throw new Error('Failed to fetch campaign');
+  return (await res.json()).campaign;
+}
+
+export async function getCampaignInsightsById(
+  id: string
+): Promise<CampaignIdInsights> {
+  const res = await fetch(`${BASE_URL}/campaigns/${id}/insights`, {
+    cache: 'no-store',
+  });
+
+  if (!res.ok) throw new Error('Failed to fetch campaign insights');
+  return (await res.json()).insights;
 }
