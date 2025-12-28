@@ -16,6 +16,7 @@ export default function CampaignTable({
   const [endDate, setEndDate] = useState('');
   const [minBudget, setMinBudget] = useState('');
   const [maxBudget, setMaxBudget] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
 
   const filteredCampaigns = campaigns.filter((c) => {
     const matchesName = c.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -26,7 +27,8 @@ export default function CampaignTable({
     const matchesBudget =
       (!minBudget || c.budget >= parseFloat(minBudget)) &&
       (!maxBudget || c.budget <= parseFloat(maxBudget));
-    return matchesName && matchesDate && matchesBudget;
+    const matchesStatus = !statusFilter || c.status === statusFilter;
+    return matchesName && matchesDate && matchesBudget && matchesStatus;
   });
 
   return (
@@ -67,6 +69,16 @@ export default function CampaignTable({
           onChange={(e) => setMaxBudget(e.target.value)}
           className="p-2 border border-gray-300 rounded"
         />
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="p-2 border border-gray-300 rounded"
+        >
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="paused">Paused</option>
+          <option value="completed">Completed</option>
+        </select>
       </div>
       <div className="overflow-y-auto max-h-64 border">
         <table className="w-full border-collapse">
