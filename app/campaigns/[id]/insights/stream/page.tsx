@@ -70,16 +70,19 @@ useEffect(()=>{
         try {
           const [campaignRes] = await Promise.all([
             getCampaignById(id),
-           
+
           ]);
-  
+
           setCampaign(campaignRes);
-         
+
+        } catch (err) {
+          console.error('Failed to fetch campaign data:', err);
+          setError(err instanceof Error ? err.message : 'Failed to load campaign data');
         } finally {
           // setLoading(false);
         }
       }
-  
+
       fetchData();
 },[id])
 
