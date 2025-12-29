@@ -54,7 +54,7 @@ export default function CampaignDetailPage() {
   }
 
   if (!campaign || !insights) {
-    return <p className="p-6 text-red-600">Failed to load campaign</p>;
+    throw new Error('Failed to load campaign');
   }
 
   return (
