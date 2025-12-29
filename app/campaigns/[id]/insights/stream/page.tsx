@@ -49,12 +49,12 @@ export default function StreamInsightsPage() {
     eventSource.onerror = () => {
       console.warn('🔴 Stream disconnected');
       setConnected(false);
-      setError('Live insights temporarily unavailable. Reconnecting…');
+      // setError('Live insights temporarily unavailable. Reconnecting…');
 
       eventSource?.close();
 
       // Retry after 10 seconds (safe for rate limits)
-      retryTimeout = setTimeout(connectStream, 10000);
+      retryTimeout = setTimeout(connectStream, 3000);
     };
   };
 
@@ -77,8 +77,9 @@ useEffect(()=>{
           setCampaign(campaignRes);
 
         } catch (err) {
-          console.error('Failed to fetch campaign data:', err);
-          setError(err instanceof Error ? err.message : 'Failed to load campaign data');
+          fetchData();
+          // console.error('Failed to fetch campaign data:', err);
+          // setError(err instanceof Error ? err.message : 'Failed to load campaign data');
         } finally {
           // setLoading(false);
         }
