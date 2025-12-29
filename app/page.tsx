@@ -23,7 +23,9 @@ export default function Home() {
 
         setCampaigns(campaigns);
         setInsights(insights);
-      } finally {
+      }catch(err){
+         fetchData();
+      }finally {
         setLoading(false);
       }
     }
@@ -34,6 +36,8 @@ export default function Home() {
    if (loading) {
     return <p className="p-6 text-center">Loading...</p>;
   }
+
+  
   return (
     <main className="p-6">
       <h1 className="text-2xl font-semibold mb-6">
