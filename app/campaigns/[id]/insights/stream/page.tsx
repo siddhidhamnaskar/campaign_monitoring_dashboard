@@ -89,7 +89,8 @@ useEffect(()=>{
 
 
   if (error) {
-    return <p className="p-6 text-center text-red-600">Error: {error}</p>;
+    throw new Error(error);
+    
   }
 
   if (!data || !campaign) {
